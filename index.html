@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>
+  Athene-emoji
+  </title>
+  <script src="./paper-full.min.js" type="text/javascript" charset="utf-8" ></script>
+  <script type="text/paperscript" canvas="background">
+    function randomPosition(){
+      ret = new Point(view.viewSize.width * Math.random(), view.viewSize.height * Math.random())
+      console.log('here');
+      console.log(ret);
+      return ret;
+    }
+
+    function shuffle(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    imageArray = [];
+    imageArray.push(new Raster('kahvikuppi'));
+    imageArray.push(new Raster('viikset'));
+    imageArray.push(new Raster('lasit'));
+    imageArray.push(new Raster('battery'));
+    imageArray.push(new Raster('handu'));
+    imageArray.push(new Raster('lappari'));
+
+    imageArray = shuffle(imageArray);
+
+    for (var i = 0; i < imageArray.length; i++) {
+      imageArray[i].position = randomPosition();
+    }
+
+
+
+    var posX;
+    var posY;
+
+    function onMouseMove(event) {
+      if(!posX){
+        posX = event.event.clientX;
+        posY = event.event.clientY;
+      }
+
+      var difX = posX - event.event.clientX;
+      var difY = posY - event.event.clientY;
+
+      console.log(difX);
+      console.log(difY);
+
+      posX = event.event.clientX;
+      posY = event.event.clientY;
+
+      for (var i = 0; i < imageArray.length; i++) {
+        if(i % 4 == 0){
+          imageArray[i].position.y += difY/50;
+          imageArray[i].position.x += difX/50;
+        } else if ((i+1) % 4 == 0){
+          imageArray[i].position.y -= difY/50;
+          imageArray[i].position.x -= difX/50;
+        } else if ((i+2) % 4 == 0){
+          imageArray[i].position.y += difY/50;
+          imageArray[i].position.x -= difX/50;
+        } else if ((i+3) % 4 == 0){
+          imageArray[i].position.y -= difY/50;
+          imageArray[i].position.x += difX/50;
+        }
+      }
+    }
+
+  </script>
+</head>
+<body style="background-color:#79b654;">
+  <canvas id="background" style="width:100%;height: 100%;"></canvas>
+  <!-- load images for start -->
+  <img src="./lasit.png" id="lasit" style="display:none;">
+  <img src="./kahvikuppi.png" id="kahvikuppi" style="display:none;">
+  <img src="./viikset.png" id="viikset" style="display:none;">
+  <img src="./battery.png" id="battery" style="display:none;">
+  <img src="./handu.png" id="handu" style="display:none;">
+  <img src="./lappari.png" id="lappari" style="display:none;">
+</body>
+</html>
